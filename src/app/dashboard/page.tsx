@@ -21,9 +21,9 @@ function ub64(s: string) { return Uint8Array.from(atob(s), c => c.charCodeAt(0))
 
 async function deriveKey(password: string, salt: Uint8Array) {
   const enc = new TextEncoder()
-  const km = await crypto.subtle.importKey('raw', enc.encode(password), 'PBKDF2', false, ['deriveKey'])
+const km = await crypto.subtle.importKey('raw', enc.encode(password) as Uint8Array<ArrayBuffer>, 'PBKDF2', false, ['deriveKey'])
   return crypto.subtle.deriveKey(
-    { name: 'PBKDF2', salt, iterations: 310000, hash: 'SHA-256' },
+    { name: 'PBKDF2', salt: salt as Uint8Array<ArrayBuffer>, iterations: 310000, hash: 'SHA-256' },
     km, { name: 'AES-GCM', length: 256 }, false, ['encrypt', 'decrypt']
   )
 }
